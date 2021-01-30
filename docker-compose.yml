@@ -1,0 +1,48 @@
+version: "3.8"
+services:
+  api:
+    container_name: no-api
+    image: no-build
+    build: .
+    ports:
+      - "8000:80"
+    depends_on:
+      - db
+    networks:
+      - "no"
+  db:
+    container_name: no-pgsql
+    image: postgres:alpine
+    environment:
+      POSTGRES_USER: kelvi
+      POSTGRES_PASSWORD: 7pkbbwbw8hpj
+      PGDATA: /data/postgres
+    volumes:
+      - postgres:/data/postgres
+    ports:
+      - "5432:5432"
+    networks:
+      - "no"
+    hostname: "db-pgsql"
+  pgadmin:
+    container_name: no-admin
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: kelvi.dalmazo@gmail.com
+      PGADMIN_DEFAULT_PASSWORD: 7pkbbwbw8hpj
+    volumes:
+       - pgadmin:/var/lib/pgadmin
+    ports:
+      - "8080:80"
+    networks:
+      - "no"
+    depends_on: 
+      - db
+
+networks:
+  "no":
+    driver: bridge
+
+volumes:
+    postgres:
+    pgadmin:
